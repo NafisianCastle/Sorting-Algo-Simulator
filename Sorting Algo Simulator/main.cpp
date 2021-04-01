@@ -1,4 +1,4 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #include<GL/gl.h>
 #include <GL/glut.h>
 #include <windows.h>
@@ -10,53 +10,57 @@ void swap(int *a, int *b) {
     *b = t;
 }
 
-int partition(int array[], int low, int high) {
-    // Select the pivot element
-    int pivot = array[high];
+int partition(int arr[], int low, int high) {
+    int pivot = arr[high];
     int i = (low - 1);
-    // Put the elements smaller than pivot on the left
-    // and greater than pivot on the right of pivot
+
     for(int j = low; j < high; j++) {
-        if(array[j] <= pivot) {
+        if(arr[j] <= pivot) {
             i++;
-            swap(&array[i], &array[j]);
+            swap(&arr[i], &arr[j]);
         }
     }
-    printArray(array, 7);
-    cout << "........\n";
-    swap(&array[i + 1], &array[high]);
+    swap(&arr[i + 1], &arr[high]);
     return (i + 1);
 }
 
-void quickSort(int array[], int low, int high) {
+void quickSort(int arr[], int low, int high) {
     if(low < high) {
-        // Select pivot position and put all the elements smaller
-        // than pivot on left and greater than pivot on right
-        int pi = partition(array, low, high);
-        // Sort the elements on the left of pivot
-        quickSort(array, low, pi - 1);
-        // Sort the elements on the right of pivot
-        quickSort(array, pi + 1, high);
+        int pi = partition(arr, low, high);
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
     }
 }
 
 float _angle1 = 0.0f;
-void drawScene() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3d(1, 0, 0);
-    glLoadIdentity(); //Reset the drawing perspective
 
-    glutSwapBuffers();
+
+void visualize_array(){
+
 }
 
+void drawScene(){
+
+}
 
 int main(int argc, char** argv) {
+     int sz;
+   cout<<"Enter the size of array::";
+   cin>>sz;
+   int randArray[sz];
+   for(int i=0;i<sz;i++)
+      randArray[i]=rand()%100+1;  //Generate number between 0 to 99
+
+   cout<<"\nElements of the array::"<<endl;
+
+   for(int i=0;i<sz;i++)
+      cout<<"Elements no "<<i+1<<"::"<<randArray[i]<<endl;
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(800, 800);
-    glutCreateWindow("Transformation");
+    glutCreateWindow("Sorting Allgo Simulator");
     glutDisplayFunc(drawScene);
-    glutTimerFunc(20, update, 0); //Add a timer
+  //  glutTimerFunc(20, update, 0); //Add a timer
     glutMainLoop();
     return 0;
 }
