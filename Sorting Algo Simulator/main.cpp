@@ -4,81 +4,81 @@
 #include <windows.h>
 using namespace std;
 
-void swap(int *a, int *b) {
-    int t = *a;
-    *a = *b;
-    *b = t;
+///QUICK SORT
+
+
+void swap(int index1, int index2) {
+    swap(arr[index1], arr[index2]);
+    drawScene();
+    usleep(delay);
 }
 
-<<<<<<< HEAD
-int partition(int arr[], int low, int high) {
-    int pivot = arr[high];
-    int i = (low - 1);
-
-=======
-int partition(int array[], int low, int high) {
-    int pivot = array[high];
-    int i = (low - 1);
-   
->>>>>>> 4732952fdeda0091fac5a5ebf77cf3538b0c0a40
-    for(int j = low; j < high; j++) {
-        if(arr[j] <= pivot) {
-            i++;
-            swap(&arr[i], &arr[j]);
+int partition(int* a, int low, int high) {
+    int lowIndex = low - 1;
+    int pivot    = a[high];
+    for(int i = low; i < high; ++i) {
+        if(a[i] <= pivot) {
+            ++lowIndex;
+            swap(a[lowIndex], a[i]);
         }
     }
-<<<<<<< HEAD
-    swap(&arr[i + 1], &arr[high]);
-=======
-    swap(&array[i + 1], &array[high]);
->>>>>>> 4732952fdeda0091fac5a5ebf77cf3538b0c0a40
-    return (i + 1);
+    ++lowIndex;
+    swap(a[lowIndex], a[high]);
+    return lowIndex;
 }
 
-void quickSort(int arr[], int low, int high) {
+void quickSortImplemented(int* a, int low, int high) {
     if(low < high) {
-<<<<<<< HEAD
-        int pi = partition(arr, low, high);
-        quickSort(arr, low, pi - 1);
-        quickSort(arr, pi + 1, high);
-=======
-      
-        int pi = partition(array, low, high);
-        quickSort(array, low, pi - 1);
-        quickSort(array, pi + 1, high);
->>>>>>> 4732952fdeda0091fac5a5ebf77cf3538b0c0a40
+        int pi = partition(a, low, high);
+        quickSort(a, low, pi - 1);
+        quickSort(a, pi + 1, high);
     }
 }
 
-float _angle1 = 0.0f;
-
-
-void visualize_array(){
-
+void quickSort(int* a, int length) {
+    quickSortImplemented(a, 0, length - 1);
 }
 
-void drawScene(){
+void visualize_array() {
+}
+void drawScene() {
+        glClearColor(0.0, 0.0, 0.0, 0.0);
+        glClear(GL_COLOR_BUFFER_BIT);
+        glColor3f(1.0, 1.0, 1.0);
+        glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+        glFlush();
+}
 
+void randomizeArray(int* arr, int length) {
+    for(int i = length - 1; i > 0; --i)
+        swap(arr[i], arr[rand() % (i + 1)]);
+}
+
+void keyboardEvent(unsigned char c, int x, int y) {
+    if(c == 27) {
+        // exit on escape key pressed
+        exit(0);
+        free(arr);
+    } else if(c == 115) {
+        // start on `s` key pressed
+        sort(arr, length);
+    }
 }
 
 int main(int argc, char** argv) {
-     int sz;
-   cout<<"Enter the size of array::";
-   cin>>sz;
-   int randArray[sz];
-   for(int i=0;i<sz;i++)
-      randArray[i]=rand()%100+1;  //Generate number between 0 to 99
-
-   cout<<"\nElements of the array::"<<endl;
-
-   for(int i=0;i<sz;i++)
-      cout<<"Elements no "<<i+1<<"::"<<randArray[i]<<endl;
+    int sz;
+    cout << "Enter the size of array::";
+    cin >> sz;
+    int randArray[sz];
+    for(int i = 1; i <= sz; i++)
+        randArray[i] = i; //assign number from 1 to size
+    randomizeArray(randArray, length);
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
     glutInitWindowSize(800, 800);
     glutCreateWindow("Sorting Allgo Simulator");
     glutDisplayFunc(drawScene);
-  //  glutTimerFunc(20, update, 0); //Add a timer
+    glutKeyboardFunc(keyboardEvent);
     glutMainLoop();
     return 0;
 }
