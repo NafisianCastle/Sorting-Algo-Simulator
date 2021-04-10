@@ -2,11 +2,6 @@
 #include <GL/glut.h>
 #include <unistd.h>
 #include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <algorithm>
-#include <iostream>
 #include <bits/stdc++.h>
 
 int length;
