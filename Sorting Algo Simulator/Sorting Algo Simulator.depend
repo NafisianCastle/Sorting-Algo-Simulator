@@ -1,12 +1,14 @@
 # depslib dependency file v1.0
-1617980223 source:c:\users\nafis\google drive\aiub\8th semester\computer graphics\sorting-algo-simulator\sorting algo simulator\main.cpp
-	<bits/stdc++.h>
+1618042058 source:c:\users\nafis\google drive\aiub\8th semester\computer graphics\sorting-algo-simulator\sorting algo simulator\main.cpp
+	"GL/gl.h"
+	<GL/glut.h>
 	<unistd.h>
 	<windows.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<algorithm>
 	<iostream>
-	<GL/gl.h>
-	<GL/glut.h>
-	<math.h>
 
 1301111162 c:\program files (x86)\codeblocks\mingw\include\windows.h
 	<winresrc.h>
@@ -250,4 +252,14 @@
 
 1341006772 c:\program files (x86)\codeblocks\mingw\include\getopt.h
 	<_mingw.h>
+
+1341006776 c:\program files (x86)\codeblocks\mingw\include\stdio.h
+	<_mingw.h>
+	<stddef.h>
+	<stdarg.h>
+	<sys/types.h>
+
+1341006776 c:\program files (x86)\codeblocks\mingw\include\time.h
+	<_mingw.h>
+	<stddef.h>
 
