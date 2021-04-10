@@ -7,117 +7,113 @@
 #include <time.h>
 #include <algorithm>
 #include <iostream>
-//using namespace std;
+#include <bits/stdc++.h>
+
 int length;
 int delay;
 int* arr;
 void (*sort)(int*, int);
-void quickSort(int*, int len);
 
 void renderFunction() {
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor3f(1.0, 1.0, 1.0);
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    float l = (float) length;
-    float widthAdder = 1 / l;
-    for(int i = 0; i < length; ++i) {
-        glBegin(GL_POLYGON);
-        float arrayIndexHeightRatio = 2 * (arr[i] + 1) / l;
-        float widthIndexAdder = 3 * i / l;
-        float leftX   = -1 + widthIndexAdder;
-        float rightX  = leftX + widthAdder;
-        float bottomY = -1;
-        float topY    = bottomY + arrayIndexHeightRatio;
-        glColor4f(0, 0.5, 0, 0);
-        glVertex2f(leftX, bottomY);
-        glVertex2f(rightX, bottomY);
-        glVertex2f(rightX, topY);
-        glVertex2f(leftX, topY);
-        glEnd();
-    }
-    glFlush();
+	glClearColor(0.0, 0.0, 0.0, 0.0);
+	glClear(GL_COLOR_BUFFER_BIT);
+    glClearColor(1.0, 1.0, 1.0, 0.0);
+    glLoadIdentity(); //Reset the drawing perspective
+	glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+	    glMatrixMode(GL_MODELVIEW);
+
+	float len = (float) length;
+	float widthAdder = 1.7 / len;
+	for (int i = 0; i < length; ++i) {
+                glPushMatrix();
+
+		glBegin(GL_POLYGON);
+		float heightRatio = 1.5 * arr[i] / len;
+		float positionAdder = 3 * i / len;
+		float leftX   = -1 + positionAdder;
+		float rightX  = leftX + widthAdder;
+		float bottomY = -1;
+		float topY    = bottomY + heightRatio;
+		glColor3f(0, 0.5, 0);
+		glVertex2f(leftX, bottomY);
+		glVertex2f(rightX, bottomY);
+		glVertex2f(rightX, topY);
+		glVertex2f(leftX, topY);
+		glEnd();
+		    glPopMatrix();
+
+		glutSwapBuffers();
+	}
+	glFlush();
 }
 
 void swap(int index1, int index2) {
-    std::swap(arr[index1], arr[index2]);
-    renderFunction();
-    usleep(delay);
+    glColor3f(1,0,0);
+	std::swap(arr[index1], arr[index2]);
+	renderFunction();
+	usleep(delay);
 }
-int partition(int* a, int low, int high)
-{
-    int lowIndex = low - 1;
-    int pivot    = a[high];
-
-    for(int i = low; i < high; ++i)
-    {
-        if(a[i] <= pivot)
-        {
-            ++lowIndex;
-            std::swap(a[lowIndex], a[i]);
-        }
-    }
-
-    ++lowIndex;
-    std::swap(a[lowIndex], a[high]);
-
-    return lowIndex;
+int partition(int* a, int low, int high) {
+	int lowIndex = low - 1, pivot    = a[high];
+	for (int i = low; i < high; ++i) {
+		if (a[i] <= pivot) {
+			++lowIndex;
+			std::swap(a[lowIndex], a[i]);
+		}
+	}
+	++lowIndex;
+	std::swap(a[lowIndex], a[high]);
+	return lowIndex;
 }
 
-void quickSortImplemented(int* a, int low, int high)
-{
-    if(low < high)
-    {
-        int pi = partition(a, low, high);
-
-        quickSortImplemented(a, low, pi - 1);
-        quickSortImplemented(a, pi + 1, high);
-    }
-}
-
-void quickSort(int* a, int length)
-{
-    quickSortImplemented(a, 0, length - 1);
-}
-void keyboardEvent(unsigned char c, int x, int y) {
-    if(c == 27) {
-        // exit on escape key pressed
-        exit(0);
-        free(arr);
-    } else if(c == 115) {
-        // start on `s` key pressed
-        sort(arr, length);
-    }
-}
-void randomizeArray(int* arr, int length)
-{
-	for(int i = length - 1; i > 0; --i)
-	{
-		std::swap(arr[i], arr[rand() % (i+1)]);
+void quickSortImplemented(int* a, int low, int high) {
+	if (low < high) {
+		int pi = partition(a, low, high);
+		quickSortImplemented(a, low, pi - 1);
+		quickSortImplemented(a, pi + 1, high);
 	}
 }
-int setUpGlutAndArray(int argc, char** argv, void (*sortingAlgorithm)(int*, int)) {
-    sort = sortingAlgorithm;
-    arr = (int*) malloc(sizeof(int) * length);
-    for(int i = 0; i < length; ++i)
-        arr[i] = i;
-    randomizeArray(arr, length);
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE);
-    glutInitWindowSize(length, length-(length*20/100));
-    glutInitWindowPosition(100, 100);
-    glutCreateWindow("Sort Algo Simulator");
-    glutDisplayFunc(renderFunction);
-    glutKeyboardFunc(keyboardEvent);
-    glutMainLoop();
+
+void quickSort(int* a, int length) {
+	quickSortImplemented(a, 0, length - 1);
+}
+void randomizeArray(int* arr, int length) {
+	for (int i = length - 1; i > 0; --i)
+		std::swap(arr[i], arr[rand() % (i + 1)]);
+}
+void keyboardEvent(unsigned char c, int x, int y) {
+	if (c == 27) {
+		// exit on escape key pressed
+		exit(0);
+		free(arr);
+	} else if (c == 115) {
+		// start on `s` key pressed
+		sort(arr, length);
+	} else if (c == 'r')
+		randomizeArray(arr, length);
 }
 
+int setUpGlutAndArray(int argc, char** argv, void (*sortingAlgorithm)(int*, int)) {
+	sort = sortingAlgorithm;
+	arr = (int*) malloc(sizeof(int) * length);
+	for (int i = 0; i < length; ++i)
+		arr[i] = i+1;
+	randomizeArray(arr, length);
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE);
+	glutInitWindowSize(2*length, length - (length * 20 / 100));
+	glutInitWindowPosition(300, 100);
+	glutCreateWindow("Sort Algo Simulator");
+	glutDisplayFunc(renderFunction);
+	glutKeyboardFunc(keyboardEvent);
+	glutMainLoop();
+}
 
 int main(int argc, char* argv[]) {
-    srand(time(NULL));
-    delay  = 3500;
-    length = 600;
-    setUpGlutAndArray(argc, argv, quickSort);
-    free(arr);
-    return 0;
+	srand(time(NULL));
+	delay  = 1500;
+	length = 300;
+	setUpGlutAndArray(argc, argv, quickSort);
+	free(arr);
+	return 0;
 }
