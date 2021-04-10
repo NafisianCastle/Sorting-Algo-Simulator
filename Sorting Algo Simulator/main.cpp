@@ -1,22 +1,14 @@
 #include "GL/freeglut.h"
 #include "GL/gl.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <algorithm>
-#include <iostream>
-#include "ArrayHelper.cpp"
+#include <bits/stdc++.h>
 #include <unistd.h>
 
-// I know this is bad, but oh well :/ Not going for best design, just
-// trying to learn
 int length;
 int delay;
 int* arr;
 void (*sort)(int*, int);
 
-// used https://www.codeproject.com/Articles/182109/Setting-up-an-OpenGL-development-environment-in-Ub
-// as starting place
+
 void renderFunction()
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -31,7 +23,6 @@ void renderFunction()
     {
         glBegin(GL_POLYGON);
 
-        // + 1 so value of 0 has height of 1
         float arrayIndexHeightRatio = 2*(arr[i] + 1)/l;
         float widthIndexAdder = 2*i/l;
 
@@ -40,19 +31,16 @@ void renderFunction()
         float bottomY = -1;
         float topY    = bottomY + arrayIndexHeightRatio;
 
-        // bottom left
+
         glColor4f(1,0,0,0);
         glVertex2f(leftX, bottomY);
 
-        // bottom right
         glColor4f(0,1,0,0);
         glVertex2f(rightX, bottomY);
 
-        // top right
         glColor4f(0,0,1,0);
         glVertex2f(rightX, topY);
 
-        // top left
         glColor4f(0,0,0,1);
         glVertex2f(leftX, topY);
 
