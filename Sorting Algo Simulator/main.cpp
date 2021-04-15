@@ -8,6 +8,7 @@ int length;
 int delay;
 int* arr;
 void (*Sort)(int*, int, int);
+int x=0.5;
 
 void renderFunction() {
     glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -15,11 +16,10 @@ void renderFunction() {
     glClearColor(1.0, 1.0, 1.0, 0.0);
     glLoadIdentity(); //Reset the drawing perspective
     glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
+
     float len = (float) length;
     float widthAdder = 1.7 / len;
     for(int i = 0; i < length; ++i) {
-        glPushMatrix();
         glBegin(GL_POLYGON);
         float heightRatio = 1.5 * arr[i] / len;
         float positionAdder = 3 * i / len;
@@ -27,13 +27,12 @@ void renderFunction() {
         float rightX  = leftX + widthAdder;
         float bottomY = -1;
         float topY    = bottomY + heightRatio;
-        glColor3f(0, 0.5, 0);
+        glColor3f(0,x, 0);
         glVertex2f(leftX, bottomY);
         glVertex2f(rightX, bottomY);
         glVertex2f(rightX, topY);
         glVertex2f(leftX, topY);
         glEnd();
-        glPopMatrix();
         glutSwapBuffers();
     }
     glFlush();
@@ -42,7 +41,8 @@ void renderFunction() {
 void swap(int index1, int index2) {
     glColor3f(1, 0, 0);
     std::swap(arr[index1], arr[index2]);
-    renderFunction();
+   // renderFunction();
+   glutPostRedisplay();
     usleep(delay);
 }
 int partition(int* a, int low, int high) {
@@ -51,6 +51,7 @@ int partition(int* a, int low, int high) {
         if(a[i] <= pivot) {
             ++lowIndex;
             std::swap(a[lowIndex], a[i]);
+            //glutPostRedisplay();
         }
     }
     ++lowIndex;
