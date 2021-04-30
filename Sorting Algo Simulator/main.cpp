@@ -1,194 +1,135 @@
+#include<windows.h>
+#include<GL/glut.h>
+#include<bits/stdc++.h>
+#include<unistd.h>
+#include<GL/gl.h>
+const int N = 25;
+int vec[N], compares = 0, exchanges = 0;
+std::string sortName = "Bubble Sort";
+int first = -1, second = -1, day = 1;
 
-class insertionSort{
-public:
-  insertionSort(int* arr,int N);
-  void sort(int* arr,int N);
-  void exchange(int* arr,int i,int j);
-};
-insertionSort::insertionSort(int* arr,int N){
-  sort(arr,N);
+void initGL();
+void display();
+void visualization(int* arr);
+void drawBitmapString(float x, float y, std::string s);
+
+void swap(int *xp, int *yp) {
+    int temp = *xp;
+    *xp = *yp;
+    *yp = temp;
 }
-void insertionSort::sort(int* arr,int N){
-  for(int i=1;i<N;i++)
-  {
-      for(int j=i;j>=1;j--)
-      {
-          compares++;
-          if(arr[j]<arr[j-1])
-              {
+void bubbleSort() {
+    for(first = 0; first < N - 1; ++first)
+        for(second = 0; second < N - first - 1; ++second) {
+            compares++;
+            usleep(1500);
+            if(vec[second] > vec[second + 1]) {
                 exchanges++;
-                exchange(arr,j,j-1);
-                visualization(arr);
-              }
-          else
-              break;
-      }
-  }
-}
-void insertionSort::exchange(int* arr,int i,int j)
-{
-    int temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
+                swap(&vec[second], &vec[second + 1]);
+                glutPostRedisplay();
+                usleep(1500);
+            }
+        }
 }
 
-class selectionSort{
-public:
-  selectionSort(int* arr,int N);
-  void sort(int* arr,int N);
-  void exchange(int* arr,int i,int j);
-};
-selectionSort::selectionSort(int* arr,int N){
-  sort(arr,N);
-}
-void selectionSort::sort(int* arr,int N)
-{
-    for(int i=0;i<N-1;i++)
-    {
-        int ind = i;
-        for(int j=i+1;j<N;j++)
-        {
-            compares++;
-            if(arr[j]<arr[ind])
-                ind = j;
-        }
-        exchanges++;
-        exchange(arr,i,ind);
-        visualization(arr);
-    }
-}
-void selectionSort::exchange(int* arr,int i,int j)
-{
-    int temp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = temp;
+void initGL() {
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-
-class quickSort{
-public:
-  quickSort(int* arr,int N);
-  void sort(int* arr,int lo,int hi);
-  void sort_shuffle(int* arr,int i,int j);
-  int part(int* arr,int lo,int hi);
-  void exchange(int* arr,int i,int j);
-};
-quickSort::quickSort(int* arr,int N){
-  sort_shuffle(arr,0,N);
-}
-void quickSort::sort_shuffle(int* arr,int i,int j)
-{
-  std::random_shuffle(arr,arr+j);
-  sort(arr,i,j);
-}
-void  quickSort::sort(int* arr,int lo,int hi)
-{
-  visualization(arr);
-  if(lo>=hi)
-  return;
-  int j = part(arr,lo,hi);
-  sort(arr,lo,j-1);
-  visualization(arr);
-  sort(arr,j+1,hi);
-  visualization(arr);
+void display() {
+    visualization(vec);
 }
 
-int quickSort::part(int* arr,int lo,int hi)
-{
-    int i = lo,j = hi+1;
-    while(true)
-    {
-        while(arr[++i]<arr[lo])
-        {
-          compares++;
-            if(i == hi)
-                break;
-        }
-        while(arr[lo]<arr[--j])
-        {
-          compares++;
-            if(j==lo)
-                break;
-        }
-        if(i>=j)
-            break;
-        exchanges++;
-        exchange(arr,i,j);
-        visualization(arr);
-    }
-    exchanges++;
-    exchange(arr,lo,j);
-    visualization(arr);
-    return j;
-}
-void quickSort::exchange(int* arr,int i,int j)
-{
-  int temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
-}
-
-class mergeSort{
-public:
-  mergeSort(int* arr,int N);
-  void sort(int* arr,int* aux,int lo,int hi);
-  void merge(int* arr,int* aux,int low,int mid, int high);
-};
-mergeSort::mergeSort(int* arr,int N){
-  int aux[N];
-  for(int i=0;i<N;i++){
-    aux[i] = arr[i];
-  }
-  sort(arr,aux,0,N-1);
-}
-void mergeSort::sort(int* arr,int* aux,int low,int high)
-{
-  compares++;
-  if(low>=high)
-  return;
-  int mid = low + (high-low)/2;
-  sort(arr,aux,low,mid);
-  visualization(arr);
-  sort(arr,aux,mid+1,high);
-  visualization(arr);
-  merge(arr,aux,low,mid,high);
-  visualization(arr);
-}
-void mergeSort::merge(int* arr,int* aux,int low,int mid, int high)
-{
-    int i=low,j=mid+1;
-    // This step can be optimized by alternatively using aux and arr array
-    // as the auxilary array
-    for(int i=0;i<N;i++)
-    {
-      aux[i] = arr[i];
-    }
-    for(int k=low;k<=high;k++)
-    {
-        if(i>mid)
-        {
-            arr[k] = aux[j++];
-            compares++;
-            exchanges++;
-        }
-        else if(j>high)
-        {
-            arr[k] = aux[i++];
-            compares++;
-            exchanges++;
-        }
-        else if(aux[i]>aux[j])
-        {
-            arr[k] = aux[j++];
-            compares++;
-            exchanges++;
-        }
+void visualization(int* arr) {
+    glClear(GL_COLOR_BUFFER_BIT); // sets the previous background with the current background
+    drawBitmapString(600, 770, sortName);
+    drawBitmapString(600, 750, "Number of Compares:" + std::to_string(compares));
+    drawBitmapString(600, 730, "Number of Exchanges:" + std::to_string(exchanges));
+    int x = 100;
+    for(int i = 0; i < N; i++) {
+        glBegin(GL_POLYGON);
+        if(i == first)
+            glColor3f(0.0f, 0.0f, 1.0f); //red
+        else if(i == second)
+            glColor3f(0.0f, 1.0f, 0.0f); //green
         else
-        {
-            arr[k] = aux[i++];
-            compares++;
-            exchanges++;
-        }
-        visualization(arr);
+            glColor3f(1.0f, 0.0f, 0.0f); //blue
+        glVertex2f(x + 50, 450);
+        glVertex2f(x, 450);
+        glVertex2f(x, 500);
+        glVertex2f(x + 50, 500);
+        glVertex2f(x + 50, 450);
+        glVertex2f(x + 50, 500);
+        glVertex2f(x, 450);
+        glVertex2f(x, 500);
+        glEnd();
+        drawBitmapString(x + 18, 470, std::to_string(vec[i]));
+        x += 50;
     }
+    glFlush();
+    glutPostRedisplay();
+    usleep(1500);
+}
+
+void drawBitmapString(float x, float y, std::string s) {
+    //glColor3f(1.0f, 0.0f, 1.0f); // sets color of the text
+    if(!day)
+        glColor3f(1.0f, 1.0f, 1.0f); //green
+    else
+        glColor3f(0.0f, 0.0f, 0.0f); //blue
+    glRasterPos2f(x, y);// screen coordinate at which text will appear
+    int length = s.size();
+    // writing charater by charater on the screen
+    for(int i = 0; i < length; i++)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
+}
+
+void randomizeArray(int* arr, int length) {
+    for(int i = length - 1; i > 0; --i)
+        std::swap(arr[i], arr[rand() % (i + 1)]);
+}
+
+void handleKeypress(unsigned char key, int x, int y) {
+    switch(key) {
+    case 'd':
+        day = 1;
+        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glutPostRedisplay();
+        break;
+    case 'n':
+        day = 0;
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glutPostRedisplay();
+        break;
+    case 'r':
+        exchanges = 0, compares = 0, first = -1, second = -1;
+        randomizeArray(vec, N);
+        glutPostRedisplay();
+        break;
+    case 's':
+        exchanges = 0, compares = 0, first = -1, second = -1;
+        bubbleSort();
+        Sleep(1);
+        break;
+    }
+}
+
+int main(int argc, char** argv) {
+    // Generating random array within the range of N
+    srand((unsigned)time(0));
+    for(int i = 0; i < N; i++)
+        vec[i] = (rand() % 100);
+    glutInit(&argc, argv); // initializing glut
+    glutInitWindowSize(1368, 760); // size of the window
+    glutCreateWindow("Sorting Simulator");// name of window
+    glutDisplayFunc(display); // call back function
+    initGL(); // initializing GL
+    glViewport(0, 0, 0, 0);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0, 1500, 0, 1000);
+    glMatrixMode(GL_MODELVIEW);
+    glutKeyboardFunc(handleKeypress);
+    glutMainLoop(); // infinite processing loop
+    return 0;
 }
