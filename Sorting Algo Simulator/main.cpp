@@ -13,6 +13,11 @@ void display();
 void visualization(int* arr);
 void drawBitmapString(float x, float y, std::string s);
 
+void update(int value){
+glutPostRedisplay();
+glutTimerFunc(20, update, 0);
+}
+
 void swap(int *xp, int *yp) {
     int temp = *xp;
     *xp = *yp;
@@ -22,12 +27,14 @@ void bubbleSort() {
     for(first = 0; first < N - 1; ++first)
         for(second = 0; second < N - first - 1; ++second) {
             compares++;
-            usleep(1500);
+             //usleep(1500);
+             visualization(vec);
             if(vec[second] > vec[second + 1]) {
                 exchanges++;
                 swap(&vec[second], &vec[second + 1]);
-                glutPostRedisplay();
-                usleep(1500);
+                visualization(vec);
+               // glutPostRedisplay();
+               //  usleep(150);
             }
         }
 }
@@ -48,12 +55,12 @@ void visualization(int* arr) {
     int x = 100;
     for(int i = 0; i < N; i++) {
         glBegin(GL_POLYGON);
-        if(i == first)
-            glColor3f(0.0f, 0.0f, 1.0f); //red
-        else if(i == second)
+        if(i == first && i < N - 1)
+            glColor3f(0.0f, 0.0f, 1.0f); //blue
+        else if(i == second && i < N - first - 1)
             glColor3f(0.0f, 1.0f, 0.0f); //green
         else
-            glColor3f(1.0f, 0.0f, 0.0f); //blue
+            glColor3f(1.0f, 0.0f, 0.0f); //red
         glVertex2f(x + 50, 450);
         glVertex2f(x, 450);
         glVertex2f(x, 500);
@@ -64,15 +71,17 @@ void visualization(int* arr) {
         glVertex2f(x, 500);
         glEnd();
         drawBitmapString(x + 18, 470, std::to_string(vec[i]));
+        drawBitmapString(500, 370, "Press 's' to start the SORTING SIMULATION !");
+        drawBitmapString(550, 300, "Press 'r' to randomize the array");
+        drawBitmapString(1250, 130,  "Press 'd' for Light mode");
+        drawBitmapString(1250, 100,  "Press 'n' for Dark mode");
         x += 50;
     }
     glFlush();
     glutPostRedisplay();
-    usleep(1500);
 }
 
 void drawBitmapString(float x, float y, std::string s) {
-    //glColor3f(1.0f, 0.0f, 1.0f); // sets color of the text
     if(!day)
         glColor3f(1.0f, 1.0f, 1.0f); //green
     else
@@ -109,6 +118,7 @@ void handleKeypress(unsigned char key, int x, int y) {
     case 's':
         exchanges = 0, compares = 0, first = -1, second = -1;
         bubbleSort();
+        glutPostRedisplay();
         Sleep(1);
         break;
     }
@@ -121,15 +131,16 @@ int main(int argc, char** argv) {
         vec[i] = (rand() % 100);
     glutInit(&argc, argv); // initializing glut
     glutInitWindowSize(1368, 760); // size of the window
-    glutCreateWindow("Sorting Simulator");// name of window
+    glutCreateWindow("Sorting Algo Simulator");// name of window
     glutDisplayFunc(display); // call back function
     initGL(); // initializing GL
     glViewport(0, 0, 0, 0);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0, 1500, 0, 1000);
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_MODELVIEW);
     glutKeyboardFunc(handleKeypress);
+   // glutTimerFunc(20, update, 0); //Add a timer
     glutMainLoop(); // infinite processing loop
     return 0;
 }
