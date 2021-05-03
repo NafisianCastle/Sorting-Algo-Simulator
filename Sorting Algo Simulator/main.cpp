@@ -35,7 +35,7 @@ void bubbleSort() {
                 exchanges++;
                 a = second, b = second + 1;
                 swap(&vec[second], &vec[second + 1]);
-                // usleep(100000);
+                usleep(100000);
                 visualization(vec);
             }
         }
@@ -165,7 +165,7 @@ void merge(int* arr, int* aux, int low, int mid, int high) {
 
 
 void initGL() {
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(1.0f, 0.75f, 1.0f, 1.0f);
 }
 
 void display() {
@@ -216,11 +216,15 @@ void visualization(int* vec) {
         drawBitmapString(1250, 130,  "Press 'd' for Light mode");
         drawBitmapString(1250, 100,  "Press 'n' for Dark mode");
         x += 50;
+        if(sortingAlgo<2 && first>=0 && second>=0){
+            drawBitmapString(180, 320, "Compare(" + std::to_string(vec[first])+", "+std::to_string(vec[second])+")");
         glBegin(GL_POLYGON);
         glColor3f(0, 1, 0); glVertex3f(250, 250, 0);
         glColor3f(1, 0, 0); glVertex3f(200, 250, 0);
         glColor3f(0, 0, 1); glVertex3f(225, 300, 0);
         glEnd();
+        }
+
     }
     glFlush();
     glutPostRedisplay();
@@ -238,7 +242,7 @@ void drawBitmapString(float x, float y, std::string s) {
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, s[i]);
 }
 
-void randomizevecay(int* vec, int length) {
+void randomizearray(int* vec, int length) {
     for(int i = length - 1; i > 0; --i)
         std::swap(vec[i], vec[rand() % (i + 1)]);
 }
@@ -247,17 +251,17 @@ void handleKeypress(unsigned char key, int x, int y) {
     switch(key) {
     case 'd':
         day = 1;
-        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClearColor(1.0, 0.75, 1.0, 1.0);
         glutPostRedisplay();
         break;
     case 'n':
         day = 0;
-        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClearColor(0.0, 0.0, 0.2, 1.0);
         glutPostRedisplay();
         break;
     case 'r':
         exchanges = 0, compares = 0, first = -1, second = -1;
-        randomizevecay(vec, N);
+        randomizearray(vec, N);
         glutPostRedisplay();
         break;
     case 's':
