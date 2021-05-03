@@ -7,16 +7,33 @@ const int N = 25;
 int vec[N], compares = 0, exchanges = 0;
 std::string sortName = "Bubble Sort";
 int first = -1, second = -1, day = 1, a = -1, b = -1, sortingAlgo = 0;
+int _move = 1000;
 
 void initGL();
 void display();
 void visualization(int* vec);
 void drawBitmapString(float x, float y, std::string s);
 
+void banner(){
+glMatrixMode(GL_MODELVIEW);
+//
+ glPushMatrix();
+	glTranslatef(_move, 0, 0);
+	//glColor3f(0.0,0.0,1.0);
+    drawBitmapString(600, 970, "WELCOME TO SORTING SIMULATOR !!!");
+    glPopMatrix();
+	glutSwapBuffers();
+}
+
 void update(int value) {
-    visualization(vec);
-    glutPostRedisplay();
-    glutTimerFunc(200, update, 0);
+
+    _move -= 1;
+    if(_move < -1200)
+    {
+        _move = 1200;
+    }
+	glutPostRedisplay(); //Notify GLUT that the display has changed
+	glutTimerFunc(20, update, 0); //Notify GLUT to call update again in 25 milliseconds
 }
 
 void swap(int *xp, int *yp) {
@@ -63,6 +80,7 @@ void sort(int lo, int hi);
 void sort_shuffle(int i, int j);
 int part(int lo, int hi);
 void exchange(int i, int j);
+
 void quickSort() {
     int i = 0, j = N;
     sort_shuffle(i, j);
@@ -182,6 +200,7 @@ void navigate(int value) {
 
 void visualization(int* vec) {
     glClear(GL_COLOR_BUFFER_BIT); // sets the previous background with the current background
+    banner();
     if(sortingAlgo == 0)
         sortName = "Bubble Sort";
     else if(sortingAlgo == 1)
@@ -203,11 +222,13 @@ void visualization(int* vec) {
         if(i == first)
             glColor3f(0.0f, 0.0f, 1.0f); //blue
         else if(i == second)
-            glColor3f(0.0f, 1.0f, 0.0f); //green
+            glColor3f(0.0f, 0.5f, 0.0f); //green
         glVertex2f(x + 50, 450);
         glVertex2f(x, 450);
         glVertex2f(x, 500);
         glVertex2f(x + 50, 500);
+//        glVertex2f(x, 40*(vec[i] + 1));
+//        glVertex2f(x + 50,40*(vec[i] + 1));
         glEnd();
         drawBitmapString(x + 18, 470, std::to_string(vec[i]));
         drawBitmapString(520, 370, "Press 's' to start the SORTING SIMULATION !");
@@ -226,15 +247,17 @@ void visualization(int* vec) {
         }
 
     }
+ //   glutTimerFunc(20, update, 0);
+ //   glutSwapBuffers();
     glFlush();
     glutPostRedisplay();
 }
 
 void drawBitmapString(float x, float y, std::string s) {
     if(!day)
-        glColor3f(1.0f, 1.0f, 1.0f); //green
+        glColor3f(1.0f, 1.0f, 1.0f);
     else
-        glColor3f(0.0f, 0.0f, 0.0f); //blue
+        glColor3f(0.0f, 0.0f, 0.0f);
     glRasterPos2f(x, y);// screen coordinate at which text will appear
     int length = s.size();
     // writing charater by charater on the screen
@@ -267,16 +290,28 @@ void handleKeypress(unsigned char key, int x, int y) {
     case 's':
         exchanges = 0, compares = 0, first = -1, second = -1;
 //        bubbleSort();
-        if(sortingAlgo == 0)
+        if(sortingAlgo == 0){
             bubbleSort();
-        else if(sortingAlgo == 1)
+            first=-1,second=-1;
+            visualization(vec);
+        }
+
+        else if(sortingAlgo == 1){
             insertionSort();
-        else if(sortingAlgo == 2)
+            first=-1,second=-1;
+            visualization(vec);
+        }
+        else if(sortingAlgo == 2){
             quickSort();
-        else
+            first=-1,second=-1;
+            visualization(vec);
+        }
+        else{
             mergeSort();
+            first=-1,second=-1;
+            visualization(vec);
+        }
         glutPostRedisplay();
-        Sleep(1);
         break;
     }
 }
@@ -299,7 +334,7 @@ int main(int argc, char** argv) {
     // Generating random vecay within the range of N
     srand((unsigned)time(0));
     for(int i = 0; i < N; i++)
-        vec[i] = (rand() % 100);
+        vec[i] = (rand() % 70)+10;
     glutInit(&argc, argv); // initializing glut
     glutInitWindowSize(1368, 760); // size of the window
     glutCreateWindow("Sorting Algo Simulator");// name of window
@@ -312,7 +347,7 @@ int main(int argc, char** argv) {
     //glMatrixMode(GL_MODELVIEW);
     glutKeyboardFunc(handleKeypress);
     glutSpecialFunc(SpecialInput);
-    glutTimerFunc(200, update, 0); //Add a timer
+//    glutTimerFunc(20, update, 0); //Add a timer
     glutMainLoop(); // infinite processing loop
     return 0;
 }
