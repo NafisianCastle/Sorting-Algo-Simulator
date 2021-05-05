@@ -4,14 +4,17 @@ Sorting algorithm simulation project with OpenGL C++
 ### Sorting Visualization
 
 <img src="/samples/sortingVisualization.gif">
+<img src="/samples/sortingVisualizationBar.gif">
 
 ### Randomizing Array Elements
 
 <img src="/samples/randomizingArrayElements.gif">
+<img src="/samples/randomizingArrayBar.gif">
 
 ### Changing Background Color
 
 <img src="/samples/changingBackgroundColor.gif">
+<img src="/samples/changingBackgroundColorBar.gif">
 
 ### Changing Algorithm
 
