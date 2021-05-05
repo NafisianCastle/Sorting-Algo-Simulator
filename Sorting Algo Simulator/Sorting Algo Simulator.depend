@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1620037397 source:c:\users\nafis\google drive\aiub\8th semester\computer graphics\sorting-algo-simulator\sorting algo simulator\main.cpp
+1620196741 source:c:\users\nafis\google drive\aiub\8th semester\computer graphics\sorting-algo-simulator\sorting algo simulator\main.cpp
 	<windows.h>
 	<GL/glut.h>
 	<bits/stdc++.h>

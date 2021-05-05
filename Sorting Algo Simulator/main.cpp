@@ -6,7 +6,7 @@
 const int N = 25;
 int vec[N], compares = 0, exchanges = 0;
 std::string sortName = "Bubble Sort";
-int first = -1, second = -1, day = 1, a = -1, b = -1, sortingAlgo = 0;
+int first = -1, second = -1, day = 1, a = -1, b = -1, sortingAlgo = 0, visArray = 1;
 int _move = 1000;
 
 void initGL();
@@ -14,26 +14,21 @@ void display();
 void visualization(int* vec);
 void drawBitmapString(float x, float y, std::string s);
 
-void banner(){
-glMatrixMode(GL_MODELVIEW);
-//
- glPushMatrix();
-	glTranslatef(_move, 0, 0);
-	//glColor3f(0.0,0.0,1.0);
+void banner() {
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(_move, 0, 0);
     drawBitmapString(600, 970, "WELCOME TO SORTING SIMULATOR !!!");
     glPopMatrix();
-	glutSwapBuffers();
+    glutSwapBuffers();
 }
 
 void update(int value) {
-
     _move -= 1;
     if(_move < -1200)
-    {
         _move = 1200;
-    }
-	glutPostRedisplay(); //Notify GLUT that the display has changed
-	glutTimerFunc(20, update, 0); //Notify GLUT to call update again in 25 milliseconds
+    glutPostRedisplay(); //Notify GLUT that the display has changed
+    glutTimerFunc(20, update, 0); //Notify GLUT to call update again in 25 milliseconds
 }
 
 void swap(int *xp, int *yp) {
@@ -198,7 +193,7 @@ void navigate(int value) {
     visualization(vec);
 }
 
-void visualization(int* vec) {
+void visualizeByArray(int* vec) {
     glClear(GL_COLOR_BUFFER_BIT); // sets the previous background with the current background
     banner();
     if(sortingAlgo == 0)
@@ -227,8 +222,10 @@ void visualization(int* vec) {
         glVertex2f(x, 450);
         glVertex2f(x, 500);
         glVertex2f(x + 50, 500);
-//        glVertex2f(x, 40*(vec[i] + 1));
-//        glVertex2f(x + 50,40*(vec[i] + 1));
+        //          glVertex2f(x + 50, 0);
+//        glVertex2f(x, 0);
+//        glVertex2f(x, 10*(vec[i] + 1));
+//        glVertex2f(x + 50,10*(vec[i] + 1));
         glEnd();
         drawBitmapString(x + 18, 470, std::to_string(vec[i]));
         drawBitmapString(520, 370, "Press 's' to start the SORTING SIMULATION !");
@@ -237,20 +234,78 @@ void visualization(int* vec) {
         drawBitmapString(1250, 130,  "Press 'd' for Light mode");
         drawBitmapString(1250, 100,  "Press 'n' for Dark mode");
         x += 50;
-        if(sortingAlgo<2 && first>=0 && second>=0){
-            drawBitmapString(180, 320, "Compare(" + std::to_string(vec[first])+", "+std::to_string(vec[second])+")");
-        glBegin(GL_POLYGON);
-        glColor3f(0, 1, 0); glVertex3f(250, 250, 0);
-        glColor3f(1, 0, 0); glVertex3f(200, 250, 0);
-        glColor3f(0, 0, 1); glVertex3f(225, 300, 0);
-        glEnd();
+        if(sortingAlgo < 1 && first >= 0 && second >= 0) {
+            drawBitmapString(180, 320, "Compare(" + std::to_string(vec[first]) + ", " + std::to_string(vec[second]) + ")");
+            glBegin(GL_POLYGON);
+            glColor3f(0, 1, 0); glVertex3f(250, 250, 0);
+            glColor3f(1, 0, 0); glVertex3f(200, 250, 0);
+            glColor3f(0, 0, 1); glVertex3f(225, 300, 0);
+            glEnd();
         }
-
     }
- //   glutTimerFunc(20, update, 0);
- //   glutSwapBuffers();
+//   glutTimerFunc(20, update, 0);
+//   glutSwapBuffers();
     glFlush();
     glutPostRedisplay();
+}
+
+void visualizeByBar(int* vec) {
+    glClear(GL_COLOR_BUFFER_BIT); // sets the previous background with the current background
+    banner();
+    if(sortingAlgo == 0)
+        sortName = "Bubble Sort";
+    else if(sortingAlgo == 1)
+        sortName = "Insertion Sort";
+    else if(sortingAlgo == 2)
+        sortName = "Quick Sort";
+    else
+        sortName = "Merge Sort";
+    drawBitmapString(600, 870, sortName);
+    drawBitmapString(600, 850, "Number of Compares:" + std::to_string(compares));
+    drawBitmapString(600, 830, "Number of Exchanges:" + std::to_string(exchanges));
+    int x = 100;
+    for(int i = 0; i < N; i++) {
+        glBegin(GL_POLYGON);
+        if(i % 2)
+            glColor3f(1.0f, 0.2f, 0.0f); //red
+        if(i % 2 == 0)
+            glColor3f(1.0f, 0.0f, 0.0f); //red
+        if(i == first)
+            glColor3f(0.0f, 0.0f, 1.0f); //blue
+        else if(i == second)
+            glColor3f(0.0f, 0.5f, 0.0f); //green
+        glVertex2f(x + 50, 0);
+        glVertex2f(x, 0);
+        glVertex2f(x, 10 * (vec[i] + 1));
+        glVertex2f(x + 50, 10 * (vec[i] + 1));
+        glEnd();
+        drawBitmapString(x + 18, 10, std::to_string(vec[i]));
+//        drawBitmapString(520, 370, "Press 's' to start the SORTING SIMULATION !");
+//        drawBitmapString(570, 300, "Press 'r' to randomize the array");
+//        drawBitmapString(430, 270, "Use LEFT/RIGHT arrow key to change the sorting algorithm ;-)");
+        drawBitmapString(1250, 930,  "Press 'd' for Light mode");
+        drawBitmapString(1250, 900,  "Press 'n' for Dark mode");
+        x += 50;
+        if(sortingAlgo < 1 && first >= 0 && second >= 0) {
+            drawBitmapString(180, 920, "Compare(" + std::to_string(vec[first]) + ", " + std::to_string(vec[second]) + ")");
+            glBegin(GL_POLYGON);
+            glColor3f(0, 1, 0); glVertex3f(250, 850, 0);
+            glColor3f(1, 0, 0); glVertex3f(200, 850, 0);
+            glColor3f(0, 0, 1); glVertex3f(225, 900, 0);
+            glEnd();
+        }
+    }
+//   glutTimerFunc(20, update, 0);
+//   glutSwapBuffers();
+    glFlush();
+    glutPostRedisplay();
+}
+
+void visualization(int* vec) {
+    if(visArray)
+        visualizeByArray(vec);
+    else
+        visualizeByBar(vec);
 }
 
 void drawBitmapString(float x, float y, std::string s) {
@@ -289,28 +344,33 @@ void handleKeypress(unsigned char key, int x, int y) {
         break;
     case 's':
         exchanges = 0, compares = 0, first = -1, second = -1;
-//        bubbleSort();
-        if(sortingAlgo == 0){
+        if(sortingAlgo == 0) {
             bubbleSort();
-            first=-1,second=-1;
+            first = -1, second = -1;
             visualization(vec);
-        }
-
-        else if(sortingAlgo == 1){
+        } else if(sortingAlgo == 1) {
             insertionSort();
-            first=-1,second=-1;
+            first = -1, second = -1;
             visualization(vec);
-        }
-        else if(sortingAlgo == 2){
+        } else if(sortingAlgo == 2) {
             quickSort();
-            first=-1,second=-1;
+            first = -1, second = -1;
             visualization(vec);
-        }
-        else{
+        } else {
             mergeSort();
-            first=-1,second=-1;
+            first = -1, second = -1;
             visualization(vec);
         }
+        glutPostRedisplay();
+        break;
+    case 'a':
+        visArray = 1;
+//        visualization(vec);
+        glutPostRedisplay();
+        break;
+    case 'b':
+        visArray = 0;
+//        visualization(vec);
         glutPostRedisplay();
         break;
     }
@@ -331,12 +391,11 @@ void SpecialInput(int key, int x, int y) {
 }
 
 int main(int argc, char** argv) {
-    // Generating random vecay within the range of N
     srand((unsigned)time(0));
     for(int i = 0; i < N; i++)
-        vec[i] = (rand() % 70)+10;
+        vec[i] = (rand() % 70) + 10;
     glutInit(&argc, argv); // initializing glut
-    glutInitWindowSize(1368, 760); // size of the window
+    glutInitWindowSize(1268, 700); // size of the window
     glutCreateWindow("Sorting Algo Simulator");// name of window
     glutDisplayFunc(display); // call back function
     initGL(); // initializing GL
@@ -344,7 +403,6 @@ int main(int argc, char** argv) {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     gluOrtho2D(0, 1500, 0, 1000);
-    //glMatrixMode(GL_MODELVIEW);
     glutKeyboardFunc(handleKeypress);
     glutSpecialFunc(SpecialInput);
 //    glutTimerFunc(20, update, 0); //Add a timer
