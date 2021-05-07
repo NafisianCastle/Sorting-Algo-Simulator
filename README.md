@@ -12,7 +12,7 @@
 
 ### Changing Background Color
 
-<img src="/samples/changingBackgroundColor.gif">
+
 <img src="/samples/changingBackgroundColorBar.gif">
 
 ### Changing Algorithm
